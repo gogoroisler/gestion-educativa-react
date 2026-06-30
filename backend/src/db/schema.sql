@@ -2,7 +2,7 @@
 -- SQLite no aplica foreign keys por defecto; se activan al abrir la conexión
 -- con `PRAGMA foreign_keys = ON;` (esto va en el código de conexión, no acá).
 
-CREATE TABLE usuarios (
+CREATE TABLE IF NOT EXISTS usuarios (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nombre TEXT NOT NULL,
   email TEXT NOT NULL UNIQUE,
@@ -12,7 +12,7 @@ CREATE TABLE usuarios (
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE cursos (
+CREATE TABLE IF NOT EXISTS cursos (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   nombre TEXT NOT NULL,
   descripcion TEXT,
@@ -20,7 +20,7 @@ CREATE TABLE cursos (
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE comisiones (
+CREATE TABLE IF NOT EXISTS comisiones (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   curso_id INTEGER NOT NULL REFERENCES cursos(id),
   docente_id INTEGER REFERENCES usuarios(id),
@@ -32,7 +32,7 @@ CREATE TABLE comisiones (
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE alumnos (
+CREATE TABLE IF NOT EXISTS alumnos (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   dni TEXT NOT NULL UNIQUE,
   nombre TEXT NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE alumnos (
 -- Tabla intermedia para la relación muchos-a-muchos alumno <-> comisión.
 -- Calificaciones y asistencias cuelgan de la inscripción, no del par
 -- alumno+comisión directo, para que una baja y un reingreso no mezclen datos.
-CREATE TABLE inscripciones (
+CREATE TABLE IF NOT EXISTS inscripciones (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   alumno_id INTEGER NOT NULL REFERENCES alumnos(id),
   comision_id INTEGER NOT NULL REFERENCES comisiones(id),
@@ -57,13 +57,13 @@ CREATE TABLE inscripciones (
 -- Índice único parcial: evita dos inscripciones ACTIVAS del mismo alumno en
 -- la misma comisión, pero permite historial (inscripciones inactivas viejas)
 -- si el alumno se da de baja y se vuelve a inscribir más adelante.
-CREATE UNIQUE INDEX idx_inscripcion_activa_unica
+CREATE UNIQUE INDEX IF NOT EXISTS idx_inscripcion_activa_unica
   ON inscripciones(alumno_id, comision_id)
   WHERE estado = 'activo';
 
 -- periodo es texto libre a propósito (ver BACKLOG.md): cada institución
 -- estructura el año distinto (cuatrimestres, trimestres, parciales sueltos).
-CREATE TABLE calificaciones (
+CREATE TABLE IF NOT EXISTS calificaciones (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   inscripcion_id INTEGER NOT NULL REFERENCES inscripciones(id),
   periodo TEXT NOT NULL,
@@ -71,7 +71,7 @@ CREATE TABLE calificaciones (
   fecha TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE asistencias (
+CREATE TABLE IF NOT EXISTS asistencias (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   inscripcion_id INTEGER NOT NULL REFERENCES inscripciones(id),
   fecha TEXT NOT NULL,
@@ -82,8 +82,8 @@ CREATE TABLE asistencias (
 -- Índices sobre las foreign keys: SQLite no las indexa automáticamente
 -- (a diferencia de la PK), y el dashboard va a hacer joins frecuentes
 -- alumno -> inscripcion -> calificaciones/asistencias.
-CREATE INDEX idx_comisiones_curso ON comisiones(curso_id);
-CREATE INDEX idx_inscripciones_alumno ON inscripciones(alumno_id);
-CREATE INDEX idx_inscripciones_comision ON inscripciones(comision_id);
-CREATE INDEX idx_calificaciones_inscripcion ON calificaciones(inscripcion_id);
-CREATE INDEX idx_asistencias_inscripcion ON asistencias(inscripcion_id);
+CREATE INDEX IF NOT EXISTS idx_comisiones_curso ON comisiones(curso_id);
+CREATE INDEX IF NOT EXISTS idx_inscripciones_alumno ON inscripciones(alumno_id);
+CREATE INDEX IF NOT EXISTS idx_inscripciones_comision ON inscripciones(comision_id);
+CREATE INDEX IF NOT EXISTS idx_calificaciones_inscripcion ON calificaciones(inscripcion_id);
+CREATE INDEX IF NOT EXISTS idx_asistencias_inscripcion ON asistencias(inscripcion_id);
