@@ -60,3 +60,11 @@ Registro de decisiones de diseño relevantes, con el contexto y las alternativas
 **Fecha:** 2026-06-30
 **Decisión:** `inscripciones` usa un índice único parcial (`WHERE estado = 'activo'`) en vez de un `UNIQUE` de tabla sobre `(alumno_id, comision_id)`.
 **Por qué:** Con borrado lógico, un alumno que se reinscribe a la misma comisión generaría una fila duplicada del par alumno+comisión. El índice parcial exige unicidad solo entre inscripciones activas, preservando el historial de inscripciones inactivas.
+
+---
+
+### 009 — `docente_id` en comisiones es opcional
+**Fecha:** 2026-06-30
+**Decisión:** `comisiones.docente_id` permite `NULL`.
+**Por qué:** Refleja un caso real de gestión administrativa — la planificación de comisiones (curso, turno, cupo) suele definirse antes de tener un docente asignado. Forzar `NOT NULL` obligaría a asignar docente en el mismo momento de crear la comisión, lo cual no siempre es así en la práctica.
+**Alternativas consideradas:** `NOT NULL` — descartado porque simplifica queries pero no refleja el flujo real de trabajo.
