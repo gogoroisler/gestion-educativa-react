@@ -63,6 +63,21 @@ Registro de decisiones de diseño relevantes, con el contexto y las alternativas
 
 ---
 
+### 010 — `bcryptjs` en vez de `bcrypt` nativo para hashear contraseñas
+**Fecha:** 2026-06-30
+**Decisión:** Se usa `bcryptjs` (implementación JavaScript pura) en vez del paquete `bcrypt` (bindings nativos en C++).
+**Por qué:** `better-sqlite3` ya requiere compilación nativa. Agregar `bcrypt` sumaría una segunda dependencia nativa, aumentando la complejidad de instalación en distintos entornos. `bcryptjs` logra el mismo resultado (mismo algoritmo, mismos hashes compatibles) sin ese costo. La diferencia de performance es despreciable para el volumen de logins de este sistema.
+**Alternativas consideradas:** `bcrypt` nativo — descartado por sumar dependencia de compilación sin beneficio real a esta escala.
+
+---
+
+### 011 — Mismo mensaje de error para email inexistente y contraseña incorrecta
+**Fecha:** 2026-06-30
+**Decisión:** `POST /api/auth/login` responde `Credenciales inválidas` en ambos casos, sin distinguir cuál de los dos falló.
+**Por qué:** Si el mensaje dijera "email no registrado", un atacante podría usar el endpoint para confirmar qué emails existen en la base (enumeración de usuarios). Usar el mismo mensaje en ambos casos elimina esa superficie de ataque.
+
+---
+
 ### 009 — `docente_id` en comisiones es opcional
 **Fecha:** 2026-06-30
 **Decisión:** `comisiones.docente_id` permite `NULL`.

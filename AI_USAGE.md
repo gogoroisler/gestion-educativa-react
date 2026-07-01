@@ -17,7 +17,7 @@ Antes de escribir la primera línea de código se definió explícitamente el mo
 - Redacción de boilerplate (`.gitignore`, estructura inicial de README).
 - Propuestas de modelado de datos, con explicación de las opciones y trade-offs de cada una.
 - Generación de SQL / código de scaffolding, una vez validada la decisión de diseño correspondiente.
-- Explicación de conceptos técnicos nuevos a medida que aparecían en el código (ej. índices parciales, constraints `CHECK`, diferencias SQLite vs. otros motores).
+- Explicación de conceptos técnicos nuevos a medida que aparecían en el código (ej. índices parciales, constraints `CHECK`, diferencias SQLite vs. otros motores, funcionamiento de JWT y bcrypt).
 
 ## Qué se decidió de forma humana
 
@@ -25,6 +25,7 @@ Antes de escribir la primera línea de código se definió explícitamente el mo
 - Todas las bifurcaciones de modelado de datos (curso/comisión separados, borrado lógico, estructura de `periodo`).
 - Alcance del MVP (qué módulos entran, cuáles se postergan — ver `BACKLOG.md`).
 - Organización de la documentación del proyecto (este archivo y `DECISIONS.md` surgieron de una pregunta del desarrollador, no de una sugerencia inicial de la IA).
+- Incorporar la revisión de los archivos `.md` como paso obligatorio antes de cada push — decisión de proceso propuesta por el desarrollador y adoptada como metodología fija a partir del módulo de auth.
 
 ## Momentos en que se corrigió el rumbo propuesto por la IA
 
