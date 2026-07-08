@@ -78,6 +78,21 @@ Registro de decisiones de diseño relevantes, con el contexto y las alternativas
 
 ---
 
+### 016 — Asistencia: registro bulk por fecha con upsert
+**Fecha:** 2026-07-07
+**Decisión:** `POST /api/comisiones/:id/asistencias` acepta `{ fecha, alumnos: [{alumno_id, presente}] }` — un solo request registra la asistencia de todos los alumnos de la clase. Si ya existe registro para un alumno en esa fecha, se actualiza (`ON CONFLICT DO UPDATE`) en vez de devolver error.
+**Por qué:** Pasar lista es una operación atómica desde el punto de vista docente — no se pasa lista de a un alumno. El upsert permite corregir errores del mismo día sin necesidad de una ruta separada de edición.
+**Alternativas consideradas:** registro individual por alumno (mismo patrón que calificaciones) — descartado porque implica N requests del frontend para registrar una clase.
+
+---
+
+### 015 — Transacción para el registro bulk de asistencias
+**Fecha:** 2026-07-07
+**Decisión:** El loop de inserts del registro bulk se envuelve en `db.transaction()`.
+**Por qué:** Sin transacción, un fallo a mitad del loop dejaría parte de los alumnos con asistencia registrada y el resto sin. La transacción garantiza atomicidad: o se guardan todos o ninguno, y la base nunca queda en estado inconsistente.
+
+---
+
 ### 014 — Permisos de calificaciones: admin + docente asignado a esa comisión
 **Fecha:** 2026-07-07
 **Decisión:** Cargar y editar notas (`POST /api/comisiones/:id/calificaciones`, `PUT /api/calificaciones/:id`) está permitido para admin y para el docente cuyo `docente_id` coincide con el de la comisión. El borrado físico de notas es exclusivo de admin.
