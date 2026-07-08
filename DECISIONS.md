@@ -78,6 +78,13 @@ Registro de decisiones de diseño relevantes, con el contexto y las alternativas
 
 ---
 
+### 014 — Permisos de calificaciones: admin + docente asignado a esa comisión
+**Fecha:** 2026-07-07
+**Decisión:** Cargar y editar notas (`POST /api/comisiones/:id/calificaciones`, `PUT /api/calificaciones/:id`) está permitido para admin y para el docente cuyo `docente_id` coincide con el de la comisión. El borrado físico de notas es exclusivo de admin.
+**Por qué:** A diferencia de alumnos (donde el docente solo lee), cargar notas es la función central del docente en el sistema. Pero el acceso debe estar acotado a su propia comisión — no puede tocar las notas de un colega.
+
+---
+
 ### 013 — Visibilidad de comisiones filtrada por rol
 **Fecha:** 2026-07-07
 **Decisión:** `GET /api/comisiones` devuelve todas las comisiones activas para admin, y solo las comisiones donde `docente_id = req.user.id` para docente. El filtro se resuelve en la query SQL condicionalmente, no con dos rutas separadas.
