@@ -78,6 +78,14 @@ Registro de decisiones de diseño relevantes, con el contexto y las alternativas
 
 ---
 
+### 017 — Dashboard: umbrales de riesgo hardcodeados (promedio < 6, asistencia < 75%)
+**Fecha:** 2026-07-08
+**Decisión:** Los umbrales que definen "alumno en riesgo" son constantes en el código: promedio < 6 y porcentaje de asistencia < 75%.
+**Por qué:** Para el MVP no hay configuración por institución. Son los valores más comunes en el sistema educativo argentino y suficientes para demostrar la feature diferencial del proyecto.
+**Alternativas consideradas:** umbrales configurables por comisión o institución — se evalúa en `BACKLOG.md` si la feature lo justifica.
+
+---
+
 ### 016 — Asistencia: registro bulk por fecha con upsert
 **Fecha:** 2026-07-07
 **Decisión:** `POST /api/comisiones/:id/asistencias` acepta `{ fecha, alumnos: [{alumno_id, presente}] }` — un solo request registra la asistencia de todos los alumnos de la clase. Si ya existe registro para un alumno en esa fecha, se actualiza (`ON CONFLICT DO UPDATE`) en vez de devolver error.

@@ -8,6 +8,8 @@ import cursosRouter from './routes/cursos.js';
 import comisionesRouter from './routes/comisiones.js';
 import { comisionCalifRouter, califRouter } from './routes/calificaciones.js';
 import { comisionAsistRouter, asistRouter } from './routes/asistencias.js';
+import dashboardRouter, { dashboardComisionHandler } from './routes/dashboard.js';
+import { verifyToken } from './middleware/auth.js';
 
 const app = express();
 app.use(cors());
@@ -21,6 +23,8 @@ app.use('/api/comisiones/:comisionId/calificaciones', comisionCalifRouter);
 app.use('/api/calificaciones', califRouter);
 app.use('/api/comisiones/:comisionId/asistencias', comisionAsistRouter);
 app.use('/api/asistencias', asistRouter);
+app.use('/api/dashboard', dashboardRouter);
+app.get('/api/comisiones/:id/dashboard', verifyToken, dashboardComisionHandler);
 
 app.get('/api/health', (req, res) => {
   const { count } = db.prepare('SELECT COUNT(*) AS count FROM usuarios').get();
