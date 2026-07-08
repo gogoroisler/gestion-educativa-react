@@ -78,6 +78,14 @@ Registro de decisiones de diseño relevantes, con el contexto y las alternativas
 
 ---
 
+### 012 — Permisos por rol en el módulo Alumnos
+**Fecha:** 2026-07-07
+**Decisión:** `GET /api/alumnos` y `GET /api/alumnos/:id`: ambos roles (admin y docente). `POST`, `PUT`, `DELETE` lógico: solo admin.
+**Por qué:** En una institución real, la gestión del padrón de alumnos (altas, modificaciones, bajas) es tarea administrativa. El docente necesita consultar el listado de su comisión pero no debería poder crear ni dar de baja alumnos.
+**Alternativas consideradas:** acceso completo para ambos roles — descartado porque no refleja los permisos reales de un sistema educativo.
+
+---
+
 ### 009 — `docente_id` en comisiones es opcional
 **Fecha:** 2026-06-30
 **Decisión:** `comisiones.docente_id` permite `NULL`.
