@@ -78,6 +78,14 @@ Registro de decisiones de diseño relevantes, con el contexto y las alternativas
 
 ---
 
+### 013 — Visibilidad de comisiones filtrada por rol
+**Fecha:** 2026-07-07
+**Decisión:** `GET /api/comisiones` devuelve todas las comisiones activas para admin, y solo las comisiones donde `docente_id = req.user.id` para docente. El filtro se resuelve en la query SQL condicionalmente, no con dos rutas separadas.
+**Por qué:** Un docente no tiene por qué ver las comisiones de sus colegas. El filtrado en SQL (vs. filtrar el array en JS) es más eficiente y no expone datos al servidor para descartarlos después.
+**Alternativas consideradas:** ambos roles ven todo — descartado por no modelar el acceso real de una institución.
+
+---
+
 ### 012 — Permisos por rol en el módulo Alumnos
 **Fecha:** 2026-07-07
 **Decisión:** `GET /api/alumnos` y `GET /api/alumnos/:id`: ambos roles (admin y docente). `POST`, `PUT`, `DELETE` lógico: solo admin.

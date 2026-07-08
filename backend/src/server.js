@@ -4,6 +4,8 @@ import 'dotenv/config';
 import db from './db/connection.js';
 import authRouter from './routes/auth.js';
 import alumnosRouter from './routes/alumnos.js';
+import cursosRouter from './routes/cursos.js';
+import comisionesRouter from './routes/comisiones.js';
 
 const app = express();
 app.use(cors());
@@ -11,6 +13,8 @@ app.use(express.json());
 
 app.use('/api/auth', authRouter);
 app.use('/api/alumnos', alumnosRouter);
+app.use('/api/cursos', cursosRouter);
+app.use('/api/comisiones', comisionesRouter);
 
 app.get('/api/health', (req, res) => {
   const { count } = db.prepare('SELECT COUNT(*) AS count FROM usuarios').get();
