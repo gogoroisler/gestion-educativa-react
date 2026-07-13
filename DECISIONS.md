@@ -78,6 +78,13 @@ Registro de decisiones de diseño relevantes, con el contexto y las alternativas
 
 ---
 
+### 020 — Frontend en carpeta `frontend/` dentro del mismo repo (monorepo)
+**Fecha:** 2026-07-08
+**Decisión:** El frontend vive en `frontend/` dentro del mismo repositorio que el backend (`backend/`), no en un repositorio separado.
+**Por qué:** Para un proyecto de portfolio de este tamaño, un solo `git clone` que entrega el sistema completo es más práctico y claro. El README puede documentar ambas partes. Un repositorio separado tiene sentido cuando hay equipos o pipelines de deploy distintos — no es el caso acá.
+
+---
+
 ### 019 — Exportación CSV: construcción manual sin librería externa
 **Fecha:** 2026-07-08
 **Decisión:** El CSV se construye con una función auxiliar propia (`csvField`, `buildCsv`) en vez de una librería como `csv-stringify`.
