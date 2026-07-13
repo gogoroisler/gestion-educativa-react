@@ -78,6 +78,20 @@ Registro de decisiones de diseño relevantes, con el contexto y las alternativas
 
 ---
 
+### 019 — Exportación CSV: construcción manual sin librería externa
+**Fecha:** 2026-07-08
+**Decisión:** El CSV se construye con una función auxiliar propia (`csvField`, `buildCsv`) en vez de una librería como `csv-stringify`.
+**Por qué:** El formato de salida es simple y controlado — no hay casos edge que justifiquen una dependencia externa. La función propia es más transparente y evita agregar una dependencia al proyecto por un uso mínimo.
+
+---
+
+### 018 — BOM UTF-8 en archivos CSV exportados
+**Fecha:** 2026-07-08
+**Decisión:** Los archivos CSV incluyen el BOM (`U+FEFF`) al inicio.
+**Por qué:** Excel en Windows interpreta los archivos CSV como Latin-1 por defecto. Sin el BOM, las tildes y la ñ aparecen como caracteres corruptos. El BOM es el mecanismo estándar para declarar UTF-8 en un archivo de texto sin metadata propia.
+
+---
+
 ### 017 — Dashboard: umbrales de riesgo hardcodeados (promedio < 6, asistencia < 75%)
 **Fecha:** 2026-07-08
 **Decisión:** Los umbrales que definen "alumno en riesgo" son constantes en el código: promedio < 6 y porcentaje de asistencia < 75%.

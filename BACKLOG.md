@@ -4,7 +4,7 @@ Funcionalidades evaluadas durante el desarrollo y pospuestas conscientemente par
 
 ## MVP — Pendiente de implementar
 
-- **Reporte institucional por materia (admin).** `GET /api/dashboard/por-materia` — compara la tasa de aprobación y el porcentaje de alumnos en riesgo entre todas las materias (cursos) activas. Responde la pregunta de gestión: "¿qué materia tiene más alumnos con dificultades?", habilitando decisiones sobre refuerzo curricular o apoyo docente. No requiere cambios de schema — el dato ya existe en calificaciones + comisiones + cursos. *(evaluado: 2026-07-08, incluido en MVP)*
+- **Reporte institucional por materia (admin).** `GET /api/dashboard/por-materia` — compara la tasa de aprobación y el porcentaje de alumnos en riesgo entre todas las materias (cursos) activas. Responde la pregunta de gestión: "¿qué materia tiene más alumnos con dificultades?", habilitando decisiones sobre refuerzo curricular o apoyo docente. No requiere cambios de schema — el dato ya existe en calificaciones + comisiones + cursos. *(evaluado: 2026-07-08, implementado en MVP)*
 
 ## Post-MVP
 

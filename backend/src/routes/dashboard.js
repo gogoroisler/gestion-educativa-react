@@ -147,4 +147,60 @@ router.get('/', verifyToken, requireRole('admin'), (req, res) => {
   res.json(stats);
 });
 
+// GET /api/dashboard/por-materia — tasa de aprobación y riesgo por curso (solo admin)
+// Responde: "¿qué materia tiene más alumnos con dificultades?"
+router.get('/por-materia', verifyToken, requireRole('admin'), (req, res) => {
+  const materias = db.prepare(`
+    WITH inscriptos AS (
+      SELECT i.id AS inscripcion_id, i.alumno_id, c.curso_id
+      FROM inscripciones i
+      JOIN comisiones c ON c.id = i.comision_id
+      WHERE i.estado = 'activo' AND c.estado = 'activo'
+    ),
+    promedios AS (
+      SELECT ins.alumno_id, ins.curso_id,
+             AVG(cal.nota) AS promedio
+      FROM inscriptos ins
+      LEFT JOIN calificaciones cal ON cal.inscripcion_id = ins.inscripcion_id
+      GROUP BY ins.alumno_id, ins.curso_id
+    ),
+    asist_pct AS (
+      SELECT ins.alumno_id, ins.curso_id,
+             CASE WHEN COUNT(asi.id) > 0
+                  THEN 100.0 * SUM(asi.presente) / COUNT(asi.id)
+                  ELSE NULL END AS pct_asistencia
+      FROM inscriptos ins
+      LEFT JOIN asistencias asi ON asi.inscripcion_id = ins.inscripcion_id
+      GROUP BY ins.alumno_id, ins.curso_id
+    ),
+    clasificados AS (
+      SELECT ins.alumno_id, ins.curso_id,
+             CASE
+               WHEN (p.promedio IS NOT NULL AND p.promedio < 6)
+                 OR (ap.pct_asistencia IS NOT NULL AND ap.pct_asistencia < 75)
+               THEN 1 ELSE 0
+             END AS en_riesgo,
+             CASE WHEN p.promedio IS NOT NULL AND p.promedio >= 6 THEN 1 ELSE 0 END AS aprobado,
+             CASE WHEN p.promedio IS NOT NULL THEN 1 ELSE 0 END AS tiene_notas
+      FROM inscriptos ins
+      LEFT JOIN promedios p  ON p.alumno_id  = ins.alumno_id AND p.curso_id  = ins.curso_id
+      LEFT JOIN asist_pct ap ON ap.alumno_id = ins.alumno_id AND ap.curso_id = ins.curso_id
+    )
+    SELECT cu.id AS curso_id,
+           cu.nombre AS curso,
+           COUNT(DISTINCT cl.alumno_id)                       AS total_inscriptos,
+           SUM(cl.aprobado)                                    AS aprobados,
+           SUM(cl.en_riesgo)                                   AS en_riesgo,
+           CASE WHEN SUM(cl.tiene_notas) > 0
+                THEN ROUND(100.0 * SUM(cl.aprobado) / SUM(cl.tiene_notas), 1)
+                ELSE NULL END                                   AS tasa_aprobacion
+    FROM clasificados cl
+    JOIN cursos cu ON cu.id = cl.curso_id
+    GROUP BY cl.curso_id
+    ORDER BY tasa_aprobacion ASC NULLS LAST
+  `).all();
+
+  res.json(materias);
+});
+
 export default router;
