@@ -2,10 +2,6 @@
 
 Funcionalidades evaluadas durante el desarrollo y pospuestas conscientemente para después del MVP. Cada entrada documenta el motivo del corte, para no perder el razonamiento de la decisión.
 
-## MVP — Pendiente de implementar
-
-- **Reporte institucional por materia (admin).** `GET /api/dashboard/por-materia` — compara la tasa de aprobación y el porcentaje de alumnos en riesgo entre todas las materias (cursos) activas. Responde la pregunta de gestión: "¿qué materia tiene más alumnos con dificultades?", habilitando decisiones sobre refuerzo curricular o apoyo docente. No requiere cambios de schema — el dato ya existe en calificaciones + comisiones + cursos. *(evaluado: 2026-07-08, implementado en MVP)*
-
 ## Post-MVP
 
 - **Vista de regularidad por alumno en la página padrón (admin).** Enriquecer la tabla de Alumnos con una columna de estado académico calculado (regular / en riesgo) basado en promedio y asistencia de sus inscripciones activas. Hoy esa información vive en el Dashboard por comisión, que es donde tiene más contexto. Agregarla al padrón requiere un endpoint nuevo o extender `GET /api/alumnos` para incluir métricas de rendimiento. *(evaluado: 2026-07-17)*

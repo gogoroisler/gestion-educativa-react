@@ -145,6 +145,44 @@ Registro de decisiones de diseño relevantes, con el contexto y las alternativas
 
 ---
 
+### 021 — Sidebar en lugar de navbar
+**Fecha:** 2026-07-08
+**Decisión:** El layout principal usa una barra lateral vertical, no una navbar horizontal.
+**Por qué:** El proyecto de portfolio existente (`gestion-pyme-django`) ya usa navbar. El sidebar diferencia visualmente este proyecto en el portfolio. Además, el menú filtrado por rol (ítems que aparecen o desaparecen según si sos admin o docente) es más natural en un sidebar — en una navbar el cambio de ítems es más disruptivo visualmente.
+**Diferenciación adicional:** El sidebar usa tokens de diseño de shadcn (`--color-sidebar-*`) con modo oscuro adaptativo, versus el sidebar del proyecto consorcio que usa `bg-slate-800` hardcodeado.
+
+---
+
+### 022 — Calificaciones y Asistencia como sub-páginas, no ítems del sidebar
+**Fecha:** 2026-07-17
+**Decisión:** Las páginas de Calificaciones (`/calificaciones?comision=:id`) y Asistencia (`/asistencia?comision=:id`) no tienen ítem en el sidebar. El único punto de entrada es desde el detalle de una comisión.
+**Por qué:** Estas páginas no tienen sentido sin una comisión de contexto — mostrarlas en el sidebar como destinos independientes sería engañoso (llevarían a una pantalla vacía o a pedir que primero elijas una comisión). El vínculo desde el detalle de comisión es semánticamente correcto: "estoy en esta comisión, quiero ver sus calificaciones".
+**Alternativas consideradas:** ítem en el sidebar que derive a un selector de comisión — descartado por agregar un paso de navegación innecesario.
+
+---
+
+### 023 — Nombre completo concatenado en SQL para queries de JOIN
+**Fecha:** 2026-07-18
+**Decisión:** En las queries que hacen JOIN con `alumnos` (comisiones/alumnos, calificaciones, asistencias, dashboard), se retorna `a.nombre || ' ' || a.apellido AS nombre` en vez de los dos campos separados.
+**Por qué:** En esas páginas (roster de comisión, tabla de calificaciones, registro de asistencia, dashboard) el frontend necesita mostrar el nombre completo como un dato de contexto, no editarlo. Devolver campos separados obligaría a actualizar cada componente para combinarlos. La concatenación en SQL entrega un contrato limpio: un solo campo `nombre` con el nombre completo, y el frontend no cambia. La única página donde se necesitan los campos separados es AlumnosPage (formulario de alta/edición), que usa `GET /api/alumnos` directamente — esa ruta devuelve ambos campos sin cambios.
+**Alternativas consideradas:** devolver `nombre` y `apellido` separados y combinarlos en el frontend — descartado por requerir cambios en cinco páginas sin beneficio real.
+
+---
+
+### 024 — Dashboard: dos vistas diferenciadas por rol en la misma ruta
+**Fecha:** 2026-07-18
+**Decisión:** `GET /` (Dashboard) muestra contenido completamente distinto según el rol: el admin ve stats globales + tabla por materia; el docente ve cards de sus propias comisiones con alumnos en riesgo. Un solo componente `DashboardPage` ramifica en el render según `user.rol`.
+**Por qué:** La necesidad de información es diferente por rol — el admin gestiona la institución en su conjunto, el docente opera sobre sus propias comisiones. Rutas separadas (`/dashboard-admin`, `/dashboard-docente`) habrían requerido duplicar lógica de navegación y protección; un solo componente que bifurca el render es más simple y la condición es trivial (`isAdmin`).
+
+---
+
+### 025 — ProtectedRoute reutilizable con prop `roles`
+**Fecha:** 2026-07-08
+**Decisión:** `ProtectedRoute` acepta una prop opcional `roles: string[]`. Si se pasa, verifica que `user.rol` esté en el array antes de renderizar; si no, redirige a `/`. Sin la prop, solo verifica que el usuario esté autenticado.
+**Por qué:** Permite reusar el mismo componente para dos casos distintos: proteger toda la app (sin `roles`) y proteger rutas por rol específico (con `roles`). La alternativa era un componente `AdminRoute` separado — innecesario cuando la condición es parametrizable.
+
+---
+
 ### 009 — `docente_id` en comisiones es opcional
 **Fecha:** 2026-06-30
 **Decisión:** `comisiones.docente_id` permite `NULL`.
