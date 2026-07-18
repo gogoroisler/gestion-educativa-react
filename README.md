@@ -186,6 +186,26 @@ gestion-educativa-react/
             └── UsuariosPage.jsx
 ```
 
+## Tests
+
+El backend tiene una suite de integración con **Vitest + Supertest** (27 tests).
+
+```bash
+cd backend
+npm test
+```
+
+Cada archivo de test corre en un proceso propio con una base SQLite en memoria (`:memory:`), así los tests están aislados entre sí y no tocan la base de datos real.
+
+| Archivo               | Qué cubre                                                              |
+|-----------------------|------------------------------------------------------------------------|
+| `auth.test.js`        | Login válido/inválido, usuario inactivo, no enumeración de emails      |
+| `alumnos.test.js`     | CRUD con control de rol, DNI duplicado, baja lógica                    |
+| `comisiones.test.js`  | Filtrado por rol, inscripción, cupo máximo, doble inscripción activa   |
+| `calificaciones.test.js` | Validación de rango, acceso por docente asignado, borrado solo admin|
+| `asistencias.test.js` | Registro bulk, upsert en misma fecha, acceso por comisión              |
+| `dashboard.test.js`   | Stats globales, restricción de rol, cálculo de riesgo                  |
+
 ## Criterios de riesgo académico
 
 Los umbrales se calculan por inscripción en el backend:
