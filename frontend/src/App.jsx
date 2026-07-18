@@ -1,22 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider, useAuth } from '@/contexts/AuthContext'
+import { AuthProvider } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
+import AppLayout from '@/layouts/AppLayout'
 import LoginPage from '@/pages/LoginPage'
 
-function AppRoot() {
-  const { user, logout } = useAuth()
+function Placeholder({ title }) {
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="text-center space-y-2">
-        <p className="text-foreground font-medium">Bienvenido, {user?.nombre}</p>
-        <p className="text-muted-foreground text-sm">Rol: {user?.rol}</p>
-        <button
-          onClick={logout}
-          className="text-sm text-destructive underline underline-offset-4"
-        >
-          Cerrar sesión
-        </button>
-      </div>
+    <div>
+      <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
+      <p className="text-muted-foreground mt-1 text-sm">Próximamente</p>
     </div>
   )
 }
@@ -28,14 +20,19 @@ export default function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route
-            path="/"
             element={
               <ProtectedRoute>
-                <AppRoot />
+                <AppLayout />
               </ProtectedRoute>
             }
-          />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          >
+            <Route path="/" element={<Placeholder title="Dashboard" />} />
+            <Route path="/alumnos" element={<Placeholder title="Alumnos" />} />
+            <Route path="/comisiones" element={<Placeholder title="Comisiones" />} />
+            <Route path="/calificaciones" element={<Placeholder title="Calificaciones" />} />
+            <Route path="/asistencia" element={<Placeholder title="Asistencia" />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </AuthProvider>
