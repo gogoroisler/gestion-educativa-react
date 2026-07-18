@@ -95,11 +95,11 @@ router.get('/:id/alumnos', verifyToken, (req, res) => {
   if (!comision) return res.status(404).json({ error: 'Comisión no encontrada' });
 
   const alumnos = db.prepare(`
-    SELECT a.id, a.dni, a.nombre, a.apellido, a.email, i.id AS inscripcion_id, i.fecha_inscripcion
+    SELECT a.id, a.dni, a.nombre, a.email, i.id AS inscripcion_id
     FROM inscripciones i
     JOIN alumnos a ON a.id = i.alumno_id
     WHERE i.comision_id = ? AND i.estado = 'activo'
-    ORDER BY a.apellido, a.nombre
+    ORDER BY a.nombre
   `).all(req.params.id);
 
   res.json(alumnos);

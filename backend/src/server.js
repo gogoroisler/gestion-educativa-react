@@ -10,7 +10,8 @@ import { comisionCalifRouter, califRouter } from './routes/calificaciones.js';
 import { comisionAsistRouter, asistRouter } from './routes/asistencias.js';
 import dashboardRouter, { dashboardComisionHandler } from './routes/dashboard.js';
 import exportsRouter from './routes/exports.js';
-import { verifyToken } from './middleware/auth.js';
+import usuariosRouter from './routes/usuarios.js';
+import { verifyToken, requireRole } from './middleware/auth.js';
 
 const app = express();
 app.use(cors());
@@ -26,7 +27,15 @@ app.use('/api/comisiones/:comisionId/asistencias', comisionAsistRouter);
 app.use('/api/asistencias', asistRouter);
 app.use('/api/dashboard', dashboardRouter);
 app.use('/api', exportsRouter);
+app.use('/api/usuarios', usuariosRouter);
 app.get('/api/comisiones/:id/dashboard', verifyToken, dashboardComisionHandler);
+
+app.get('/api/docentes', verifyToken, requireRole('admin'), (req, res) => {
+  const docentes = db.prepare(
+    "SELECT id, nombre, email FROM usuarios WHERE rol = 'docente' AND estado = 'activo' ORDER BY nombre"
+  ).all();
+  res.json(docentes);
+});
 
 app.get('/api/health', (req, res) => {
   const { count } = db.prepare('SELECT COUNT(*) AS count FROM usuarios').get();

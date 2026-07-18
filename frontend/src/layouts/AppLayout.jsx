@@ -9,6 +9,7 @@ import {
   LogOut,
   Sun,
   Moon,
+  UserCog,
 } from 'lucide-react'
 import { useAuth } from '@/contexts/AuthContext'
 
@@ -18,6 +19,7 @@ const navItems = [
   { to: '/comisiones',     icon: BookOpen,         label: 'Comisiones'                             },
   { to: '/calificaciones', icon: ClipboardList,    label: 'Calificaciones'                         },
   { to: '/asistencia',     icon: CalendarCheck,    label: 'Asistencia'                             },
+  { to: '/usuarios',       icon: UserCog,          label: 'Docentes',       roles: ['admin']       },
 ]
 
 export default function AppLayout() {
