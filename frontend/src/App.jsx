@@ -7,6 +7,8 @@ import AlumnosPage from '@/pages/AlumnosPage'
 import ComisionesPage from '@/pages/ComisionesPage'
 import ComisionDetailPage from '@/pages/ComisionDetailPage'
 import UsuariosPage from '@/pages/UsuariosPage'
+import CalificacionesPage from '@/pages/CalificacionesPage'
+import AsistenciaPage from '@/pages/AsistenciaPage'
 
 function Placeholder({ title }) {
   return (
@@ -34,8 +36,8 @@ export default function App() {
             <Route path="/alumnos" element={<ProtectedRoute roles={['admin']}><AlumnosPage /></ProtectedRoute>} />
             <Route path="/comisiones" element={<ComisionesPage />} />
             <Route path="/comisiones/:id" element={<ComisionDetailPage />} />
-            <Route path="/calificaciones" element={<Placeholder title="Calificaciones" />} />
-            <Route path="/asistencia" element={<Placeholder title="Asistencia" />} />
+            <Route path="/calificaciones" element={<CalificacionesPage />} />
+            <Route path="/asistencia" element={<AsistenciaPage />} />
             <Route path="/usuarios" element={<ProtectedRoute roles={['admin']}><UsuariosPage /></ProtectedRoute>} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Route>

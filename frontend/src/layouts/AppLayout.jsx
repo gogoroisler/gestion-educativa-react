@@ -4,8 +4,6 @@ import {
   LayoutDashboard,
   Users,
   BookOpen,
-  ClipboardList,
-  CalendarCheck,
   LogOut,
   Sun,
   Moon,
@@ -17,8 +15,6 @@ const navItems = [
   { to: '/',               icon: LayoutDashboard, label: 'Dashboard',      end: true              },
   { to: '/alumnos',        icon: Users,            label: 'Alumnos',        roles: ['admin']       },
   { to: '/comisiones',     icon: BookOpen,         label: 'Comisiones'                             },
-  { to: '/calificaciones', icon: ClipboardList,    label: 'Calificaciones'                         },
-  { to: '/asistencia',     icon: CalendarCheck,    label: 'Asistencia'                             },
   { to: '/usuarios',       icon: UserCog,          label: 'Docentes',       roles: ['admin']       },
 ]
 
