@@ -21,7 +21,7 @@ import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
 } from '@/components/ui/select'
 
-const TURNOS = ['Mañana', 'Tarde', 'Noche']
+const TURNOS = ['mañana', 'tarde', 'noche']
 const emptyForm = { nombre: '', curso_id: '', turno: '', cupo: '', anio: String(new Date().getFullYear()), docente_id: '' }
 
 export default function ComisionesPage() {

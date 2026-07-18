@@ -7,7 +7,8 @@ import 'dotenv/config';
 // import.meta.url reemplaza a __dirname, que no existe en ES Modules.
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const dbPath = path.resolve(process.cwd(), process.env.DB_PATH || './data/gestion_educativa.db');
+const rawPath = process.env.DB_PATH || './data/gestion_educativa.db';
+const dbPath = rawPath === ':memory:' ? ':memory:' : path.resolve(process.cwd(), rawPath);
 const schemaPath = path.join(__dirname, 'schema.sql');
 
 const db = new Database(dbPath);

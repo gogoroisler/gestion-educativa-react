@@ -48,6 +48,10 @@ comisionCalifRouter.post('/', verifyToken, (req, res) => {
     return res.status(400).json({ error: 'alumno_id, periodo y nota son requeridos' });
   }
 
+  if (typeof nota !== 'number' || nota < 0 || nota > 10) {
+    return res.status(400).json({ error: 'La nota debe ser un número entre 0 y 10' });
+  }
+
   const inscripcion = db.prepare(`
     SELECT id FROM inscripciones
     WHERE alumno_id = ? AND comision_id = ? AND estado = 'activo'
