@@ -3,6 +3,7 @@ import { AuthProvider } from '@/contexts/AuthContext'
 import ProtectedRoute from '@/components/ProtectedRoute'
 import AppLayout from '@/layouts/AppLayout'
 import LoginPage from '@/pages/LoginPage'
+import AlumnosPage from '@/pages/AlumnosPage'
 
 function Placeholder({ title }) {
   return (
@@ -27,7 +28,7 @@ export default function App() {
             }
           >
             <Route path="/" element={<Placeholder title="Dashboard" />} />
-            <Route path="/alumnos" element={<Placeholder title="Alumnos" />} />
+            <Route path="/alumnos" element={<ProtectedRoute roles={['admin']}><AlumnosPage /></ProtectedRoute>} />
             <Route path="/comisiones" element={<Placeholder title="Comisiones" />} />
             <Route path="/calificaciones" element={<Placeholder title="Calificaciones" />} />
             <Route path="/asistencia" element={<Placeholder title="Asistencia" />} />

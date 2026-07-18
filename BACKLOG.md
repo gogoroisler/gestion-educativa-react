@@ -8,6 +8,11 @@ Funcionalidades evaluadas durante el desarrollo y pospuestas conscientemente par
 
 ## Post-MVP
 
+- **Vista de regularidad por alumno en la página padrón (admin).** Enriquecer la tabla de Alumnos con una columna de estado académico calculado (regular / en riesgo) basado en promedio y asistencia de sus inscripciones activas. Hoy esa información vive en el Dashboard por comisión, que es donde tiene más contexto. Agregarla al padrón requiere un endpoint nuevo o extender `GET /api/alumnos` para incluir métricas de rendimiento. *(evaluado: 2026-07-17)*
+
+- **Filtro por año de inscripción en la página Alumnos (admin).** Permitir filtrar el padrón por el año de la comisión en que el alumno tiene inscripciones activas (`comisiones.anio`). Útil para ver cuántos alumnos ingresaron por ciclo lectivo. Requiere extender `GET /api/alumnos` con un query param `anio` y hacer el join con `inscripciones` + `comisiones` en el backend. La descarga CSV client-side ya está implementada y se beneficiaría automáticamente del filtro. *(evaluado: 2026-07-17)*
+
+
 - **Reporte comparativo por turno (admin).** Compara tasa de aprobación y asistencia promedio entre turnos (mañana/tarde/noche). Habilita decisiones de asignación de recursos docentes y horarios. El campo `turno` en `comisiones` ya existe para soportarlo. *(evaluado: 2026-07-08)*
 
 - **Reporte interanual (admin).** Compara tasa de aprobación por año lectivo (`anio` en `comisiones`). Permite seguimiento de tendencia institucional año a año. Requiere datos de al menos dos años para ser útil — viable desde el año 2 de uso del sistema. *(evaluado: 2026-07-08)*

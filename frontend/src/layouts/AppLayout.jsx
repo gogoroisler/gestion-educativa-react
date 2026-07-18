@@ -13,11 +13,11 @@ import {
 import { useAuth } from '@/contexts/AuthContext'
 
 const navItems = [
-  { to: '/',              icon: LayoutDashboard, label: 'Dashboard',       end: true },
-  { to: '/alumnos',       icon: Users,            label: 'Alumnos'                   },
-  { to: '/comisiones',    icon: BookOpen,         label: 'Comisiones'                },
-  { to: '/calificaciones',icon: ClipboardList,    label: 'Calificaciones'            },
-  { to: '/asistencia',    icon: CalendarCheck,    label: 'Asistencia'                },
+  { to: '/',               icon: LayoutDashboard, label: 'Dashboard',      end: true              },
+  { to: '/alumnos',        icon: Users,            label: 'Alumnos',        roles: ['admin']       },
+  { to: '/comisiones',     icon: BookOpen,         label: 'Comisiones'                             },
+  { to: '/calificaciones', icon: ClipboardList,    label: 'Calificaciones'                         },
+  { to: '/asistencia',     icon: CalendarCheck,    label: 'Asistencia'                             },
 ]
 
 export default function AppLayout() {
@@ -46,7 +46,7 @@ export default function AppLayout() {
         </div>
 
         <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
-          {navItems.map(({ to, icon: Icon, label, end }) => (
+          {navItems.filter(item => !item.roles || item.roles.includes(user?.rol)).map(({ to, icon: Icon, label, end }) => (
             <NavLink
               key={to}
               to={to}
