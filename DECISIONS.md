@@ -183,6 +183,43 @@ Registro de decisiones de diseño relevantes, con el contexto y las alternativas
 
 ---
 
+### 026 — Tests de integración en lugar de unitarios
+**Fecha:** 2026-07-18
+**Decisión:** La suite de tests usa integración (request HTTP real → base de datos real en memoria) en lugar de tests unitarios con mocks.
+**Por qué:** El valor de los tests en este proyecto está en verificar que los tres elementos trabajen juntos correctamente: el handler valida bien, la query SQL es correcta, y el control de acceso funciona de punta a punta. Los tests unitarios con mocks habrían testeado cada pieza en aislamiento pero no habrían encontrado los bugs reales que encontró la suite (un 500 por CHECK constraint no capturado, un turno en mayúsculas que rechazaba la DB). Con mocks, esos bugs sobrevivirían hasta producción.
+**Alternativas consideradas:** tests unitarios con mocks de `db` — descartado porque desacopla el test de la base de datos real, que es exactamente donde estaban los bugs. Tests e2e con Playwright — descartado por complejidad de setup y lentitud; el valor marginal sobre la integración es bajo para este proyecto.
+
+---
+
+### 027 — Vitest en lugar de Jest para el backend
+**Fecha:** 2026-07-18
+**Decisión:** Se usa Vitest como test runner en el backend, a pesar de que Jest es más común en proyectos Node/Express.
+**Por qué:** El frontend ya usa Vite, y Vitest tiene soporte nativo para ESModules sin configuración adicional. Jest con ESModules requiere Babel o configuración de transform que agrega fricción. Como el backend usa `"type": "module"`, Vitest es la opción con menos fricción para este stack.
+
+---
+
+### 028 — SQLite `:memory:` con pool `forks` para aislamiento entre tests
+**Fecha:** 2026-07-18
+**Decisión:** Los tests corren con `DB_PATH=:memory:` y Vitest en modo `forks` (un proceso por archivo de test).
+**Por qué:** Con `forks`, cada archivo de test obtiene su propio proceso Node — y por lo tanto su propio módulo `connection.js` con su propia base en memoria. Los tests de distintos archivos no se contaminan entre sí aunque corran en paralelo. Dentro de cada archivo, `beforeEach` limpia y re-seedea los datos para que cada test parta de un estado conocido.
+**Alternativas consideradas:** un único archivo de test con una DB compartida — descartado porque el orden de los tests afectaría los resultados. Un archivo de setup global que crea y destruye la DB — más complejo sin beneficio real dado que `forks` ya da el aislamiento necesario.
+
+---
+
+### 029 — bcrypt cost 4 en tests (vs 10 en producción)
+**Fecha:** 2026-07-18
+**Decisión:** En `helpers.js`, el hash de contraseñas usa cost factor 4 en lugar del 10 que usa el seed de producción.
+**Por qué:** bcrypt es intencionalmente lento — cost 10 tarda ~100ms por hash en hardware moderno. Con `beforeEach` que seedea varios usuarios antes de cada test, cost 10 haría cada test ~300-400ms más lento. Cost 4 tarda ~3ms: el algoritmo es idéntico, los hashes son válidos y compatibles, solo es menos resistente a fuerza bruta — lo cual no tiene ninguna relevancia en una base de datos de test en memoria.
+
+---
+
+### 030 — Separación de app.js y server.js para testabilidad
+**Fecha:** 2026-07-18
+**Decisión:** La configuración de Express (middlewares, rutas) vive en `app.js` que exporta `app`. El archivo `server.js` solo importa `app` y llama a `app.listen()`.
+**Por qué:** Supertest necesita importar la app de Express sin que se llame a `listen()` — si `listen()` está en el mismo módulo que la configuración, importar el módulo en un test levanta el servidor en un puerto real, lo cual puede causar conflictos y no es necesario. La separación es el patrón estándar para hacer un servidor Express testeable.
+
+---
+
 ### 009 — `docente_id` en comisiones es opcional
 **Fecha:** 2026-06-30
 **Decisión:** `comisiones.docente_id` permite `NULL`.

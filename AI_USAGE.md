@@ -38,4 +38,12 @@ Antes de escribir la primera línea de código se definió explícitamente el mo
 
 - **2026-07-18** — `AlumnosPage` fue construida con un campo `telefono` en el formulario y en la tabla, campo que no existe en el schema de `alumnos`. Además faltaba el campo `apellido`, que el backend requiere como obligatorio al crear un alumno (`dni, nombre y apellido son requeridos`). Esto hacía que el formulario de alta fallara silenciosamente o devolviera 400. El error fue detectado al leer `backend/src/routes/alumnos.js` y contrastar con el schema. Se corrigió reemplazando `telefono` por `apellido` en el formulario y ajustando la tabla y el CSV.
 
+- **2026-07-18 — Dos bugs de sesiones anteriores detectados por los tests de integración:**
+
+  - *Nota fuera de rango devolvía 500.* La ruta `POST /api/comisiones/:id/calificaciones` no validaba el rango de la nota antes de intentar el INSERT. SQLite rechazaba el valor con un CHECK constraint violation que Express convertía en un 500 sin mensaje útil. El test que esperaba un 400 lo hizo visible de inmediato. Corrección: validación explícita en el handler antes de tocar la base de datos.
+
+  - *Turno en mayúsculas rechazado por la base de datos.* `ComisionesPage` definía `TURNOS = ['Mañana', 'Tarde', 'Noche']` (con mayúscula inicial), pero el schema tiene `CHECK (turno IN ('mañana', 'tarde', 'noche'))` en minúsculas. Crear una comisión desde el formulario habría fallado con un error de constraint. El bug pasó desapercibido porque la demo usaba datos del seed (cargados directamente en minúsculas) y el formulario nunca fue ejercitado antes de los tests. Corrección: `TURNOS` en minúsculas.
+
+  Ambos bugs existían en el código desde sesiones anteriores y no fueron detectados durante la revisión de código ni durante el desarrollo. La suite de integración los encontró en la primera corrida.
+
 *(Este archivo se actualiza a medida que avanza el proyecto, no se redacta retroactivamente al final.)*
