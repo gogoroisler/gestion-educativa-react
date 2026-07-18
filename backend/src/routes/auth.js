@@ -31,7 +31,7 @@ router.post('/login', (req, res) => {
     { expiresIn: process.env.JWT_EXPIRES_IN || '8h' }
   );
 
-  res.json({ token, rol: usuario.rol, nombre: usuario.nombre });
+  res.json({ token, id: usuario.id, rol: usuario.rol, nombre: usuario.nombre });
 });
 
 export default router;

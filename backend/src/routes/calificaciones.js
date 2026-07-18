@@ -23,13 +23,13 @@ comisionCalifRouter.get('/', verifyToken, (req, res) => {
 
   const calificaciones = db.prepare(`
     SELECT cal.id, cal.periodo, cal.nota, cal.fecha,
-           a.id AS alumno_id, a.nombre, a.dni,
+           a.id AS alumno_id, a.nombre || ' ' || a.apellido AS nombre, a.dni,
            i.id AS inscripcion_id
     FROM calificaciones cal
     JOIN inscripciones i ON i.id = cal.inscripcion_id
     JOIN alumnos a ON a.id = i.alumno_id
     WHERE i.comision_id = ? AND i.estado = 'activo'
-    ORDER BY a.nombre, cal.periodo
+    ORDER BY a.apellido, a.nombre, cal.periodo
   `).all(comisionId);
 
   res.json(calificaciones);

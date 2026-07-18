@@ -16,7 +16,7 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 
-const emptyForm = { dni: '', nombre: '', email: '', telefono: '' }
+const emptyForm = { dni: '', nombre: '', apellido: '', email: '' }
 
 export default function AlumnosPage() {
   const { token, user } = useAuth()
@@ -62,8 +62,8 @@ export default function AlumnosPage() {
     setForm({
       dni: alumno.dni,
       nombre: alumno.nombre,
+      apellido: alumno.apellido,
       email: alumno.email ?? '',
-      telefono: alumno.telefono ?? '',
     })
     setFormError('')
     setDialogOpen(true)
@@ -96,8 +96,8 @@ export default function AlumnosPage() {
 
   function downloadCsv() {
     const csvField = v => `"${String(v ?? '').replace(/"/g, '""')}"`
-    const headers = ['DNI', 'Nombre', 'Email', 'Teléfono']
-    const rows = alumnos.map(a => [a.dni, a.nombre, a.email, a.telefono])
+    const headers = ['DNI', 'Nombre', 'Apellido', 'Email']
+    const rows = alumnos.map(a => [a.dni, a.nombre, a.apellido, a.email])
     const lines = [headers, ...rows].map(r => r.map(csvField).join(','))
     const blob = new Blob(['﻿' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)
@@ -150,8 +150,8 @@ export default function AlumnosPage() {
               <TableRow>
                 <TableHead>DNI</TableHead>
                 <TableHead>Nombre</TableHead>
+                <TableHead>Apellido</TableHead>
                 <TableHead>Email</TableHead>
-                <TableHead>Teléfono</TableHead>
                 {isAdmin && <TableHead className="w-24">Acciones</TableHead>}
               </TableRow>
             </TableHeader>
@@ -170,8 +170,8 @@ export default function AlumnosPage() {
                   <TableRow key={alumno.id}>
                     <TableCell className="font-mono text-sm">{alumno.dni}</TableCell>
                     <TableCell>{alumno.nombre}</TableCell>
+                    <TableCell>{alumno.apellido}</TableCell>
                     <TableCell className="text-muted-foreground">{alumno.email || '—'}</TableCell>
-                    <TableCell className="text-muted-foreground">{alumno.telefono || '—'}</TableCell>
                     {isAdmin && (
                       <TableCell>
                         <div className="flex items-center gap-1">
@@ -218,11 +218,20 @@ export default function AlumnosPage() {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="nombre">Nombre completo</Label>
+              <Label htmlFor="nombre">Nombre</Label>
               <Input
                 id="nombre"
                 value={form.nombre}
                 onChange={e => setForm(p => ({ ...p, nombre: e.target.value }))}
+                required
+              />
+            </div>
+            <div className="space-y-1">
+              <Label htmlFor="apellido">Apellido</Label>
+              <Input
+                id="apellido"
+                value={form.apellido}
+                onChange={e => setForm(p => ({ ...p, apellido: e.target.value }))}
                 required
               />
             </div>
@@ -234,14 +243,6 @@ export default function AlumnosPage() {
                 value={form.email}
                 onChange={e => { setForm(p => ({ ...p, email: e.target.value })); setFormError('') }}
                 onInvalid={e => { e.preventDefault(); setFormError('Ingresá un email válido') }}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="telefono">Teléfono</Label>
-              <Input
-                id="telefono"
-                value={form.telefono}
-                onChange={e => setForm(p => ({ ...p, telefono: e.target.value }))}
               />
             </div>
             {formError && <p className="text-sm text-destructive">{formError}</p>}
@@ -262,7 +263,7 @@ export default function AlumnosPage() {
           <AlertDialogHeader>
             <AlertDialogTitle>¿Desactivar alumno?</AlertDialogTitle>
             <AlertDialogDescription>
-              {deleteTarget?.nombre} quedará inactivo. Sus notas y asistencias se conservan.
+              {deleteTarget?.nombre} {deleteTarget?.apellido} quedará inactivo. Sus notas y asistencias se conservan.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

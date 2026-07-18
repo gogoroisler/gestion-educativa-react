@@ -49,7 +49,7 @@ export function dashboardComisionHandler(req, res) {
       LEFT JOIN asistencias asi ON asi.inscripcion_id = ins.inscripcion_id
       GROUP BY ins.alumno_id
     )
-    SELECT a.id AS alumno_id, a.nombre, a.apellido, a.dni,
+    SELECT a.id AS alumno_id, a.nombre || ' ' || a.apellido AS nombre, a.dni,
            p.promedio,
            ap.pct_asistencia,
            ap.clases_totales,

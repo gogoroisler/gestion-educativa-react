@@ -215,7 +215,7 @@ export default function ComisionDetailPage() {
                 </SelectTrigger>
                 <SelectContent>
                   {todosAlumnos.map(a => (
-                    <SelectItem key={a.id} value={String(a.id)}>{a.nombre} ({a.dni})</SelectItem>
+                    <SelectItem key={a.id} value={String(a.id)}>{a.nombre} {a.apellido} ({a.dni})</SelectItem>
                   ))}
                 </SelectContent>
               </Select>

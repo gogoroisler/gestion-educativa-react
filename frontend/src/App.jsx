@@ -9,15 +9,7 @@ import ComisionDetailPage from '@/pages/ComisionDetailPage'
 import UsuariosPage from '@/pages/UsuariosPage'
 import CalificacionesPage from '@/pages/CalificacionesPage'
 import AsistenciaPage from '@/pages/AsistenciaPage'
-
-function Placeholder({ title }) {
-  return (
-    <div>
-      <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
-      <p className="text-muted-foreground mt-1 text-sm">Próximamente</p>
-    </div>
-  )
-}
+import DashboardPage from '@/pages/DashboardPage'
 
 export default function App() {
   return (
@@ -32,7 +24,7 @@ export default function App() {
               </ProtectedRoute>
             }
           >
-            <Route path="/" element={<Placeholder title="Dashboard" />} />
+            <Route path="/" element={<DashboardPage />} />
             <Route path="/alumnos" element={<ProtectedRoute roles={['admin']}><AlumnosPage /></ProtectedRoute>} />
             <Route path="/comisiones" element={<ComisionesPage />} />
             <Route path="/comisiones/:id" element={<ComisionDetailPage />} />

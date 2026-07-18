@@ -18,7 +18,7 @@ export function AuthProvider({ children }) {
     const data = await res.json()
     if (!res.ok) throw new Error(data.error || 'Error al iniciar sesión')
 
-    const userData = { nombre: data.nombre, rol: data.rol }
+    const userData = { id: data.id, nombre: data.nombre, rol: data.rol }
     setToken(data.token)
     setUser(userData)
     localStorage.setItem('token', data.token)

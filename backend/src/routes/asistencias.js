@@ -24,13 +24,13 @@ comisionAsistRouter.get('/', verifyToken, (req, res) => {
 
   const asistencias = db.prepare(`
     SELECT asi.id, asi.fecha, asi.presente,
-           a.id AS alumno_id, a.nombre, a.dni,
+           a.id AS alumno_id, a.nombre || ' ' || a.apellido AS nombre, a.dni,
            i.id AS inscripcion_id
     FROM asistencias asi
     JOIN inscripciones i ON i.id = asi.inscripcion_id
     JOIN alumnos a ON a.id = i.alumno_id
     WHERE i.comision_id = ? AND i.estado = 'activo' ${filtroFecha}
-    ORDER BY asi.fecha DESC, a.nombre
+    ORDER BY asi.fecha DESC, a.apellido, a.nombre
   `).all(...params);
 
   res.json(asistencias);
