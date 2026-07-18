@@ -12,6 +12,10 @@ Funcionalidades evaluadas durante el desarrollo y pospuestas conscientemente par
 
 - **Filtro por año de inscripción en la página Alumnos (admin).** Permitir filtrar el padrón por el año de la comisión en que el alumno tiene inscripciones activas (`comisiones.anio`). Útil para ver cuántos alumnos ingresaron por ciclo lectivo. Requiere extender `GET /api/alumnos` con un query param `anio` y hacer el join con `inscripciones` + `comisiones` en el backend. La descarga CSV client-side ya está implementada y se beneficiaría automáticamente del filtro. *(evaluado: 2026-07-17)*
 
+- **Módulo de carreras y plan de estudios.** El modelo actual no tiene el concepto de carrera ni de plan de estudios (qué materias corresponden a qué año de qué carrera). Esto impide saber si un alumno está inscripto en las materias correctas para su etapa, ni calcular su avance en la carrera. Requiere nuevas tablas: `carreras`, `plan_de_estudios` (carrera + curso + año + cuatrimestre), `alumno_carrera` (qué carrera cursa cada alumno y desde qué año). Habilita correlatividades y validaciones de inscripción. *(evaluado: 2026-07-17)*
+
+- **Regularidad institucional.** En instituciones de formación superior y universitarias (alcance de LES y reglamentos internos), un alumno que no aprueba un mínimo de materias durante un período definido pierde su condición de alumno regular de la institución y debe solicitar formalmente su reincorporación. Este concepto es distinto de la regularidad por materia (que ya modelamos) y requiere: definir el umbral mínimo de materias aprobadas por período, calcular si cada alumno lo cumple, y gestionar el estado de regularidad institucional (regular / irregular / reincorporado). Depende del módulo de carreras para ser significativo — sin plan de estudios no se puede saber cuántas materias debería haber aprobado. *(evaluado: 2026-07-17)*
+
 
 - **Reporte comparativo por turno (admin).** Compara tasa de aprobación y asistencia promedio entre turnos (mañana/tarde/noche). Habilita decisiones de asignación de recursos docentes y horarios. El campo `turno` en `comisiones` ya existe para soportarlo. *(evaluado: 2026-07-08)*
 
